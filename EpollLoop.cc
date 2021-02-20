@@ -54,7 +54,7 @@ NetEpoll* EpollLoop::ShareEpoll()
 {
 	if(!m_sharedEpoll)
 	{
-		m_sharedEpoll = new NetEpoll(3, 10000);
+		m_sharedEpoll = new NetEpoll(3, 100000);
 	}
 	return m_sharedEpoll;
 }

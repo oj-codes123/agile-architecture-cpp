@@ -4,6 +4,7 @@
 #include "TcpSysClient.h"
 #include "TcpSysConnection.h"
 #include <map>
+#include <unordered_map>
 
 namespace agile
 {
@@ -18,7 +19,7 @@ TcpSysClient::~TcpSysClient()
 	
 }
 
-static std::map<std::string, TcpSysConnection> global_sys_tcps;
+static std::unordered_map<std::string, TcpSysConnection> global_sys_tcps;
 
 static TcpProtocol* global_sys_client_protocol = nullptr;
 

@@ -687,6 +687,7 @@ bool ConnectionManager::HanldeRead(TcpConnection* conn)
 			if(pSize > conn->GetBuffer().GetBufferSize() )
 			{
 				conn->Close();
+				LOG_ERROR_S << "pSize=" << pSize << " > bSize:" << conn->GetBuffer().GetBufferSize();
 				break;
 			}
 		}
@@ -772,10 +773,7 @@ bool ConnectionManager::HanldeRead(TcpConnection* conn)
 
 void ConnectionManager::HandleWrite(TcpConnection* conn)
 {
-	if (m_connFuncs.writeCallback)
-	{
-		(m_connFuncs.writeCallback)(conn);
-	}
+	conn->HandleWrite();
 }
 
 }

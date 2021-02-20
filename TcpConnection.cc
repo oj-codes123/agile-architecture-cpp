@@ -141,16 +141,35 @@ int TcpConnection::Send(const char* buff, int buff_len)
 		return -1;
 	}
 	
-	int traceIndex = 0;
+	m_writeBuffer.Write(buff, buff_len);
+	if(!IsWriting()){
+		EnableWriting();
+	}
+	return 0;
+
+	/*int traceIndex = 0;
 	int ret = SendCharsHelper(buff, traceIndex, buff_len);
-	
 	while (ret < (int)buff_len && ret > 0)
 	{
 		traceIndex += ret;
 		buff_len   -= ret;
 		ret = SendCharsHelper(buff, traceIndex, buff_len);
 	}
-	return ret > 0 ? buff_len : -1;
+	return ret > 0 ? buff_len : -1;*/
+}
+
+void TcpConnection::HandleWrite()
+{
+	uint32_t rIndex = m_writeBuffer.GetReadIndex();
+	uint32_t wIndex = m_writeBuffer.GetWriteIndex();
+	uint32_t packetSize = wIndex - rIndex;
+	int len = TcpConnection::SendCharsHelper(m_writeBuffer.GetBuffer(), rIndex, packetSize);
+	if(len >= packetSize){
+		DisableWriting();
+		m_writeBuffer.ResetIndex();
+	} else {
+		EnableWriting();
+	}
 }
 
 int TcpConnection::SendCharsHelper(const char* buff, int traceIndex, int packetSize)

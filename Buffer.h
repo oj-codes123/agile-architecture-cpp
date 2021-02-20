@@ -30,12 +30,14 @@ public:
     virtual ~Buffer();
 
     void ReSize(uint32_t size);
+
+    void ResetIndex();
 	
     void SetWriteIndex(uint32_t wIndex);
     uint32_t GetWriteIndex();
 
     void SetReadIndex(uint32_t rIndex);
-    int32_t GetReadIndex();
+    uint32_t GetReadIndex();
 
     uint32_t GetReadAbleSize();
     uint32_t GetWriteAbleSize();
@@ -69,6 +71,7 @@ public:
 	
 private:
 	void Clear();
+    bool ExtendSpace(uint32_t len);
 	
 private:
     uint32_t m_rIndex;

@@ -40,6 +40,12 @@ void Buffer::Clear()
 	emptyVal.clear();
 }
 
+void Buffer::ResetIndex()
+{
+	m_rIndex = 0;
+	m_wIndex = 0;
+}
+
 void Buffer::SetWriteIndex(uint32_t wIndex)
 { 
 	m_wIndex = wIndex; 
@@ -153,13 +159,34 @@ Buffer& Buffer::operator >> (std::string& val)
     return *this;
 }
 
+bool Buffer::ExtendSpace(uint32_t len)
+{
+    uint32_t emptySize = m_buffer.size() - (m_wIndex - m_rIndex);
+    if( emptySize < len )
+    {
+        uint32_t buffSize = m_buffer.size() + len - emptySize + 2;
+        m_buffer.resize(buffSize);
+    }
+    std::copy(&*m_buffer.begin() + m_rIndex, &*m_buffer.begin() + m_wIndex, &*m_buffer.begin());
+    m_wIndex -= m_rIndex;
+    m_rIndex = 0;
+    return true;
+}
+
 void Buffer::Write(const void* buffer, uint32_t len)
 {
-	if(len > 0 && m_wIndex + len < m_buffer.size() )
-	{
-		std::copy((BChar*)buffer, (BChar*)buffer + len, &*m_buffer.begin() + m_wIndex);
-		m_wIndex += len;
-	}
+    if(len == 0){
+        return;
+    }
+
+    if(m_wIndex + len >= m_buffer.size() ){
+        if( !ExtendSpace(len) ){
+            return;
+        }
+    }
+    
+	std::copy((BChar*)buffer, (BChar*)buffer + len, &*m_buffer.begin() + m_wIndex);
+	m_wIndex += len;
 }
 
 bool Buffer::Read(void* buffer, uint32_t len)

@@ -87,6 +87,8 @@ public:
     bool IsWriting()   const { return m_eventObj.events & GEpollWriteEvent; }
     bool IsReading()   const { return m_eventObj.events & GEpollReadEvent;  }
 
+    void HandleWrite();
+
 	void AddEvent();
 	void UpdateEvent();
     void DeleteEvent();
@@ -109,6 +111,7 @@ protected:
     std::string  m_key;
 	int64_t      m_intKey = 0;
 	
+    Buffer       m_writeBuffer;
     BufferNet    m_buffer;
 
     epoll_event m_eventObj;

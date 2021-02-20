@@ -2,6 +2,7 @@
 #pragma once
 #include <deque>
 #include <map>
+#include <unordered_map>
 #include "IConnectionManager.h"
 
 namespace agile
@@ -129,14 +130,14 @@ private:
 	
 	std::map<int, TcpConnection*> m_listenConns;
 	
-	std::map<int, TcpConnection*> m_runConns;
+	std::unordered_map<int, TcpConnection*> m_runConns;
 	
-	std::map<int, TcpConnection*> m_conns;
+	std::unordered_map<int, TcpConnection*> m_conns;
 	
-	std::map<std::string, NameSocketData> m_nameSockets;
+	std::unordered_map<std::string, NameSocketData> m_nameSockets;
 	
-	std::map<uint64_t, int> m_intKeySokcets;
-	std::map<std::string, int> m_strKeySockets;
+	std::unordered_map<uint64_t, int> m_intKeySokcets;
+	std::unordered_map<std::string, int> m_strKeySockets;
 	
 	std::map<std::string, uint64_t> m_maskIps;
 	
