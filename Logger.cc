@@ -19,16 +19,17 @@ static std::string global_cur_date;
 static int global_log_id;
 static int global_log_cur_size;
 static int global_log_max_size;
+static int global_log_cur_level;
 
 static const std::string AgileLoggerLevelNames[7] =
 {
-	"[TRACE]",
-	"[DEBUG]",
-	"[INFO ]",
-	"[WARN ]",
-	"[ERROR]",
-	"[FATAL]",
-    "[SYSTEM]"
+	"TRACE",
+	"DEBUG",
+	"INFO",
+	"WARN",
+	"ERROR",
+	"FATAL",
+    "SYSTEM"
 };
 
 static char char_time[32];
@@ -37,11 +38,19 @@ void Logger::InitLog(const std::string& logName, int logSize)
 {
 	global_log_name = logName;
 	global_log_id   = 0;
-	global_log_cur_size = 0;
-	global_log_max_size = 1024 * 1024 * 5;
-	if(logSize > 1024 * 10){
+	global_log_cur_level = 0;
+	global_log_cur_size  = 0;
+	global_log_max_size  = 1024 * 1024 * 5;
+	if(logSize >= 1024 * 10){
 		global_log_max_size = logSize;
 	}
+}
+
+void Logger::SetLogLevel(int level){
+	if(level < LogLevel::LogTrace || level > LogLevel::LogSys){
+		return;
+	}
+	global_log_cur_level = level;
 }
 
 static void GetYMD(std::stringstream& ss)
@@ -68,7 +77,7 @@ static void GetDateString(std::stringstream& ss)
     time(&timestamp);
     struct tm* tm_time = localtime(&timestamp);
 
-	int len = snprintf(char_time, sizeof(char_time), "%4d-%02d-%02d %02d:%02d:%02d",
+	snprintf(char_time, sizeof(char_time), "%4d-%02d-%02d %02d:%02d:%02d",
 	tm_time->tm_year + 1900, tm_time->tm_mon + 1, tm_time->tm_mday,
 	tm_time->tm_hour, tm_time->tm_min, tm_time->tm_sec);
 
@@ -235,7 +244,7 @@ Logger::~Logger()
 			fseek(pFile, 0, SEEK_END);
 			fwrite(m_logStream.str().c_str(), m_logStream.str().length(), 1, pFile);
 			fclose(pFile);
-			//printf("%s", m_logStream.str().c_str() );
+			printf("%s", m_logStream.str().c_str() );
 		}
 	}
 	else

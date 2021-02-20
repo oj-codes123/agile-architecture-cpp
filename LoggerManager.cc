@@ -62,6 +62,7 @@ void LoggerManager::ToRefresh()
 			fseek(pFile, 0, SEEK_END);
 			fwrite(it.second.str().c_str(), it.second.str().length(), 1, pFile);
 			fclose(pFile);
+			printf("%s", it.second.str().c_str() );
 		}
 	}
 	m_loggers.clear();

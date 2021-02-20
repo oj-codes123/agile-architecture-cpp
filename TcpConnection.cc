@@ -142,7 +142,8 @@ int TcpConnection::Send(const char* buff, int buff_len)
 	}
 	
 	m_writeBuffer.Write(buff, buff_len);
-	if(!IsWriting()){
+	if(!IsWriting())
+	{
 		EnableWriting();
 	}
 	return 0;
@@ -160,21 +161,26 @@ int TcpConnection::Send(const char* buff, int buff_len)
 
 void TcpConnection::HandleWrite()
 {
+	//{LOG_DEBUG_S << "-------------------------------------";}
 	uint32_t rIndex = m_writeBuffer.GetReadIndex();
 	uint32_t wIndex = m_writeBuffer.GetWriteIndex();
-	uint32_t packetSize = wIndex - rIndex;
+	uint32_t packetSize = (uint32_t)(wIndex - rIndex);
+
 	int len = TcpConnection::SendCharsHelper(m_writeBuffer.GetBuffer(), rIndex, packetSize);
-	if(len >= packetSize){
+	if(len >= (int)packetSize)
+	{
 		DisableWriting();
 		m_writeBuffer.ResetIndex();
-	} else {
+	} 
+	else 
+	{
 		EnableWriting();
 	}
 }
 
 int TcpConnection::SendCharsHelper(const char* buff, int traceIndex, int packetSize)
 {
-	{ LOG_DEBUG_S << "traceIndex:" << traceIndex << ", packetSize:" << packetSize; }
+	//{ LOG_DEBUG_S << "traceIndex:" << traceIndex << ", packetSize:" << packetSize; }
 	
 	int ret = send(m_socket.GetSocketId(), buff + traceIndex, (unsigned)packetSize, 0);
 	if(ret > 0)
@@ -229,7 +235,7 @@ void TcpConnection::HandleError()
 
 void TcpConnection::HandleClose()
 {
-    LOG_INFO("socket:%d", m_socket.GetSocketId());
+    LOG_DEBUG("socket:%d", m_socket.GetSocketId());
 	if(TcpConnState_Closing == m_state || TcpConnState_Closed == m_state)
 	{
 		return;
@@ -326,7 +332,7 @@ int ServerConnection::HanldeRead()
         }
         else
         {
-            LOG_INFO("new connection : %d", clientId);
+            LOG_DEBUG("new connection : %d", clientId);
 			m_connMgr->OnNewConnection(clientId, m_buffSize);
         }
     }
@@ -361,7 +367,7 @@ int ClientConnection::Connect()
 	
 	if(isConnecting)
 	{
-		LOG_INFO_S << "connecting [" << m_name << "]" << m_ip << ":" << m_port << " ...";
+		{ LOG_INFO_S << "connecting [" << m_name << "]" << m_ip << ":" << m_port << " ..."; }
 	  
 		fd_set readfds;
 		fd_set writefds;

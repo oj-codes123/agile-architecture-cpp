@@ -74,7 +74,7 @@ public:
 		
 		TcpClient::Instance().GetConnectionManager()->BroadcastConns("test_client", sender);
 		
-		Utility::AddSecTimer(5, std::bind(&ClientTest::SendMsgTimer, &ClientTest::Instance(), std::placeholders::_1));
+		Utility::AddSecTimer(2, std::bind(&ClientTest::SendMsgTimer, &ClientTest::Instance(), std::placeholders::_1), 100);
 	}
 	
 	int OnReceive(Connection* conn)
@@ -246,7 +246,7 @@ int main(int argc,char *argv[])
 {
 	if(argc > 1)
 	{
-		Logger::InitLog("test_client_log");
+		Logger::InitLog("test_client_log", 1024 * 10);
 		
 		TcpClient::Instance().Init(false);
 		TcpClient::Instance().GetConnectionManager()->SetConnectionDelegateFacotry( new ClientDelegateFacotry() );
@@ -262,7 +262,7 @@ int main(int argc,char *argv[])
 		
 		TcpClient::Instance().GetConnectionManager()->SetConnectionRunTime(20000);
 		TcpClient::Instance().GetConnectionManager()->SetConnectionPingTime(10);
-		Utility::AddSecTimer(5, std::bind(&ClientTest::SendMsgTimer, &ClientTest::Instance(), std::placeholders::_1));
+		Utility::AddSecTimer(5, std::bind(&ClientTest::SendMsgTimer, &ClientTest::Instance(), std::placeholders::_1), 100);
 		
 		TcpClient::Instance().Start();
 	}

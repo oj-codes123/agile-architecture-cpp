@@ -61,7 +61,7 @@ void Buffer::SetReadIndex(uint32_t rIndex)
 	m_rIndex = rIndex; 
 }
 
-int32_t Buffer::GetReadIndex()
+uint32_t Buffer::GetReadIndex()
 {
 	return m_rIndex; 
 }

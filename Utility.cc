@@ -9,19 +9,19 @@
 namespace agile
 {
 	
-void Utility::AddSecTimer(uint32_t secVal, std::function<void(uint64_t)> callbackFunc)
+void Utility::AddSecTimer(uint32_t secVal, std::function<void(uint64_t)> callbackFunc, int id)
 {
-	Timer::Instance().AddSecTimer(secVal, callbackFunc);
+	Timer::Instance().AddSecTimer(secVal, callbackFunc, id);
 }
 	
-void Utility::AddMSecTimer(uint32_t msecVal, std::function<void(uint64_t)> callbackFunc)
+void Utility::AddMSecTimer(uint32_t msecVal, std::function<void(uint64_t)> callbackFunc, int id)
 {
-	Timer::Instance().AddMSecTimer(msecVal, callbackFunc);
+	Timer::Instance().AddMSecTimer(msecVal, callbackFunc, id);
 }
 
-void AddCurMSecTimer(uint64_t curMSecVal, std::function<void(uint64_t)> callbackFunc)
+void AddCurMSecTimer(uint64_t curMSecVal, std::function<void(uint64_t)> callbackFunc, int id)
 {
-	Timer::Instance().AddCurMSecTimer(curMSecVal, callbackFunc);
+	Timer::Instance().AddCurMSecTimer(curMSecVal, callbackFunc, id);
 }
 
 uint64_t Utility::CurSec()

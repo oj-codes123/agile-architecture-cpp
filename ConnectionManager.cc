@@ -27,7 +27,7 @@ ConnectionManager::ConnectionManager()
 
 bool ConnectionManager::GetSokcetIdsByName(const std::string& name, std::vector<int>& socketIds)
 {
-	std::map<std::string, NameSocketData>::iterator it_name = m_nameSockets.find(name);
+	auto it_name = m_nameSockets.find(name);
 	if( it_name != m_nameSockets.end() )
 	{
 		socketIds = it_name->second.sockets;
@@ -38,25 +38,25 @@ bool ConnectionManager::GetSokcetIdsByName(const std::string& name, std::vector<
 
 Connection* ConnectionManager::GetConnectionBySocketId(int socketId)
 {
-	std::map<int, TcpConnection*>::iterator it = m_conns.find(socketId);
+	auto it = m_conns.find(socketId);
 	return it != m_conns.end() ? it->second : nullptr;
 }
 
 Connection* ConnectionManager::GetConnectionByIntKey(uint64_t intKey)
 {
-	std::map<uint64_t, int>::iterator it_int = m_intKeySokcets.find(intKey);
+	auto it_int = m_intKeySokcets.find(intKey);
 	return it_int != m_intKeySokcets.end() ? GetConnectionBySocketId(it_int->second) : nullptr;
 }
 
 Connection* ConnectionManager::GetConnectionByStrKey(const std::string& strKey)
 {
-	std::map<std::string, int>::iterator it_str = m_strKeySockets.find(strKey);
+	auto it_str = m_strKeySockets.find(strKey);
 	return it_str != m_strKeySockets.end() ? GetConnectionBySocketId(it_str->second) : nullptr;
 }
 
 Connection* ConnectionManager::GetConnectionByName(const std::string& name)
 {
-	std::map<std::string, NameSocketData>::iterator it_name = m_nameSockets.find(name);
+	auto it_name = m_nameSockets.find(name);
 	if( it_name != m_nameSockets.end() )
 	{
 		int socketId = it_name->second.GetSocket();
@@ -695,7 +695,7 @@ bool ConnectionManager::HanldeRead(TcpConnection* conn)
 		readCount = read(conn->GetSocketId(), conn->GetBuffer().CurWrite(), buffSize);
 		if(readCount > 0)
 		{
-			LOG_DEBUG_S << "GetPacketSize:" << conn->GetBuffer().GetPacketSize();
+			//LOG_DEBUG_S << "GetPacketSize:" << conn->GetBuffer().GetPacketSize();
 			
 			conn->GetBuffer().IncrWriteIndex(readCount);
 			if(conn->GetBuffer().IsFullPacket())
@@ -713,7 +713,7 @@ bool ConnectionManager::HanldeRead(TcpConnection* conn)
 					}
 				}
 				
-				LOG_DEBUG_S << "readCount:" << readCount;
+				//LOG_DEBUG_S << "readCount:" << readCount;
 				
 				conn->GetBuffer().FinishReadPacket();
 			}
